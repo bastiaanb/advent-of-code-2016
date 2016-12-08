@@ -11,7 +11,7 @@ print_display() {
 }
 
 print_pixels() {
-  echo $display | tr -d '.' | tr -d '\n' | wc -c
+  tr -d '.\n' <<< $display | wc -c
 }
 
 rect() {
@@ -24,19 +24,9 @@ rotate_row() {
 
 rotate_column() {
   perl -p -e "s/^\
-(.{$2})(.)(.{$(( width - $2 - 1 ))})\
-(.{$2})(.)(.{$(( width - $2 - 1 ))})\
-(.{$2})(.)(.{$(( width - $2 - 1 ))})\
-(.{$2})(.)(.{$(( width - $2 - 1 ))})\
-(.{$2})(.)(.{$(( width - $2 - 1 ))})\
-(.{$2})(.)(.{$(( width - $2 - 1 ))})\
+$(for ((i=0; i < height; i++)); do echo -n "(.{$2})(.)(.{$(( width - $2 - 1 ))})"; done)\
 /\
-\$1\$$(( (18 + 2 - 3 * $3) % 18 ))\$3\
-\$4\$$(( (18 + 5 - 3 * $3) % 18 ))\$6\
-\$7\$$(( (18 + 8 - 3 * $3) % 18 ))\$9\
-\$10\$$(( (18 + 11 - 3 * $3) % 18 ))\$12\
-\$13\$$(( (18 + 14 - 3 * $3) % 18 ))\$15\
-\$16\$$(( (18 + 17 - 3 * $3) % 18 ))\$18\
+$(for ((i=0; i < height; i++)); do echo -n "\$$((1 + 3 * i))\$$(( (18 + 2 + 3 * (i - $3)) % 18 ))\$$((3 + 3 * i))"; done)\
 /" <<< $1
 }
 
@@ -44,7 +34,6 @@ echo -n -e "\e[s"
 
 sleep=${1:-0}
 while read line ; do
-#  echo $line
   if [[ $line =~ ^rect\ ([0-9]+)x([0-9]+) ]]; then
     display=$(rect $display ${BASH_REMATCH[1]} ${BASH_REMATCH[2]})
   elif [[ $line =~ ^rotate\ row\ y=([0-9]+)\ by\ ([0-9]+) ]]; then
