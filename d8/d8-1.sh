@@ -27,7 +27,7 @@ rotate_column() {
   perl -p -e "s/^\
 $(for ((i=0; i < height; i++)); do echo -n "(.{$2})(.)(.{$(( width - $2 - 1 ))})"; done)\
 /\
-$(for ((i=0; i < height; i++)); do echo -n "\$$((1 + 3 * i))\$$(( (18 + 2 + 3 * (i - $3)) % 18 ))\$$((3 + 3 * i))"; done)\
+$(for ((i=0; i < height; i++)); do echo -n "\$$((1 + 3 * i))\$$(( (2 + 3 * (height + i - $3)) % (height * 3) ))\$$((3 + 3 * i))"; done)\
 /" <<< $1
 }
 
