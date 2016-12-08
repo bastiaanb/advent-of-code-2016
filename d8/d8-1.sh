@@ -3,8 +3,9 @@
 width=50
 height=6
 
-display=$(yes . | head -$(( width * height)) | tr -d '\n')
-allhash=$(tr '.' '#' <<< $display)
+allspaces=$(printf "%$((width * height))s")
+allhashes=${allspaces// /#}
+display=${allspaces// /.}
 
 print_display() {
   sed "s/.\{${width}\}/&\n/g" <<< $1
@@ -15,7 +16,7 @@ print_pixels() {
 }
 
 rect() {
-  echo "$(perl -p -e "s/(.{$2})(.{$(( width - $2 ))})/${allhash:0:$2}\$2/g" <<< ${1:0:$((width * $3))})${1:$((width * $3))}"
+  echo "$(perl -p -e "s/(.{$2})(.{$(( width - $2 ))})/${allhashes:0:$2}\$2/g" <<< ${1:0:$((width * $3))})${1:$((width * $3))}"
 }
 
 rotate_row() {
