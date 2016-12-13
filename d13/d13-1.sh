@@ -5,7 +5,12 @@ declare -A positions
 
 put_at() {
   positions["$1:$2"]=$3
-  echo -n "$(tput cup $2 $1)$3"
+  echo -n "$(tput cup $2 $1)"
+  case "$3" in
+    "#") echo -n "$(tput setab 1) " ;;
+    "o") echo -n "$(tput setab 3) " ;;
+    "@") echo -n "$(tput setab 4) " ;;
+  esac
   sleep .02
 }
 
@@ -33,7 +38,7 @@ try_position() {
       put_at $x $y "#"
     fi
   elif [[ $state == "@" ]]; then
-    echo -n "$(tput cup 0 50)step $step: found target!"
+    echo -n "$(tput cup 0 50)$(tput setab 0)step $step: found target!"
     exit
   fi
 }
@@ -46,7 +51,7 @@ nextx=(1)
 nexty=(1)
 
 for ((step=1; ; step++)); do
-  echo -n "$(tput cup 0 50)step $step"
+  echo -n "$(tput cup 0 50)$(tput setab 0)step $step"
   currentx=("${nextx[@]}")
   currenty=("${nexty[@]}")
   nextx=()
