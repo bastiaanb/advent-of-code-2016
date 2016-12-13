@@ -1,23 +1,12 @@
 #!/bin/bash
 
-#FAVNUM=10
 FAVNUM=1358
-
 declare -A positions
 
 put_at() {
   positions["$1:$2"]=$3
   echo -n "$(tput cup $2 $1)$3"
   sleep .02
-}
-
-even_parity() {
-  local n=$1
-  local parity
-  for ((parity=0; n > 0; n >>=1)); do
-    [[ $((n & 1)) -eq 1 ]] && ((parity=1-parity))
-  done
-  return $parity
 }
 
 is_open() {
@@ -50,9 +39,6 @@ try_position() {
 }
 
 clear
-
-# set target
-#put_at 7 4 "@"
 put_at 31 39 "@"
 
 declare -a currentx currenty nextx nexty
@@ -74,16 +60,3 @@ for ((step=1; ; step++)); do
     try_position $cx $((cy + 1))
   done
 done
-
-
-
-
-
-
-
-
-
-
-
-
-#ddd

@@ -1,8 +1,6 @@
 #!/bin/bash
 
-#FAVNUM=10
 FAVNUM=1358
-
 declare -A positions
 
 put_at() {
@@ -49,9 +47,6 @@ try_position() {
 }
 
 clear
-
-# set target
-#put_at 7 4 "@"
 put_at 31 39 "@"
 
 declare -a currentx currenty nextx nexty
@@ -76,15 +71,3 @@ done
 
 echo -n "$(tput cup 50 0)reachable locations "
 echo "${positions[@]}" | tr ' ' '\n' | grep o | wc -l
-
-
-
-
-
-
-
-
-
-
-
-#ddd
