@@ -64,4 +64,8 @@ for ((step=1; ; step++)); do
     [[ $cy -gt 0 ]] && try_position $cx $((cy - 1))
     try_position $cx $((cy + 1))
   done
+  if [[ $step -le 50 ]]; then
+    echo -n "$(tput cup 1 50)$(tput setab 0)reachable locations after step: $step "
+    echo "${positions[@]}" | tr ' ' '\n' | grep o | wc -l
+  fi
 done
