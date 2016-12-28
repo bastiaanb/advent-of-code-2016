@@ -17,7 +17,7 @@ shortestpath=""
 shortestlength=1000000
 
 while [[ ${#next[@]} -gt 0 ]]; do
-  printf "%s\n" ${next[@]}
+  printf "%s\n" "${next[@]}"
   echo
   current=("${next[@]}")
   next=()
@@ -38,14 +38,12 @@ while [[ ${#next[@]} -gt 0 ]]; do
           else
             nextvisited=$((currentvisited+1))
           fi
-          if [[ $nextvisited -eq ${#nodes[@]} ]] && ([[ $part -eq 1 ]] || [[ $to -eq 0 ]]) ; then
-            echo "found path $nextpath length $nextlength"
-            if [[ $nextlength -lt $shortestlength ]]; then
+          if [[ $nextlength -lt $shortestlength ]]; then
+            if [[ $nextvisited -eq ${#nodes[@]} ]] && ([[ $part -eq 1 ]] || [[ $to -eq 0 ]]) ; then
+              echo "found path $nextpath length $nextlength"
               shortestlength=$nextlength
               shortestpath=$nextpath
-            fi
-          else
-            if [[ $nextlength -lt $shortestlength ]]; then
+            else
               next+=("${nextpath}:${nextvisited}:${nextlength}")
             fi
           fi
