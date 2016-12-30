@@ -1,11 +1,5 @@
 #!/bin/bash
 
-elfs=$(($1 - 1))
-for((pow=1; elfs >= pow; pow*=3 )); do true; done
-((
-  pow/=3,
-  remainder=elfs%pow,
-  winner=remainder + ((elfs/pow)-1) * (pow + 1 + remainder)
-))
+for((pow=1, elfs=$1 - 1; elfs >= pow * 3; pow*=3 )); do true; done
 
-echo $((winner+1))
+echo $(( (elfs / pow) * (1 + pow + elfs % pow) - pow ))
