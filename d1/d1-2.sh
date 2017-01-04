@@ -8,24 +8,28 @@ declare -A rot
 rot=([L]=-1 [R]=1)
 
 step=1
+earlieststep=1000000
+hqdistance=1000000
 for i in $(sed 's/,//g'); do
   r=${i:0:1}
   l=${i:1}
 
-  NDY=$((-1 * rot[$r] * $DX))
-  DX=$((rot[$r] * $DY))
-  DY=$NDY
-
+  (( tDY=-1 * rot[$r] * DX, DX=rot[$r] * DY, DY=tDY ))
   for s in $(seq 1 $l) ; do
-    LX=$(($LX + $DX))
-    LY=$(($LY + $DY))
+    ((LX+=DX, LY+=DY))
     echo "x=$LX y=$LY"
-    if [[ ${trail["$LX:$LY"]} -gt 0 ]] ; then
-      echo visited $LX : $LY in step ${trail["$LX:$LY"]}
-      echo $((${LX#-} + ${LY#-}))
-      exit 0
+    visited=${trail["$LX:$LY"]}
+    if [[ $visited -gt 0 ]] ; then
+      echo visited $LX : $LY in step $visited
+      if [[ $visited -lt $earlieststep ]] ;then
+        earlieststep=$visited
+        hqdistance=$((${LX#-} + ${LY#-}))
+      fi
+    else
+      trail["$LX:$LY"]=$step
     fi
-    trail["$LX:$LY"]=$step
   done
   ((step++))
 done
+
+echo hq is $hqdistance units away
