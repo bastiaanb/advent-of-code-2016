@@ -1,28 +1,30 @@
 #!/bin/bash
 
 INPUT=${1:-abc}
+REPEATS=${2:-2017}
 
-hashes=()
-k=0
-for ((i=0; ; i++)); do
-  hash=$(echo -n "$INPUT$i" | md5sum | cut -f1 -d\  )
-  hashes+=("$hash")
-  m=$(grep -o -P '(.)(?=\1{4})' <<< $hash)
-  if [ -n "$m" ] ; then
-    echo found 5: $i $m $hash
-    if [[ $i -lt 1000 ]]; then
-      start=0
-    else
-      start=$((i - 1000))
+./d14 $INPUT $REPEATS | {
+  declare -A found
+
+  hashes=()
+  found=()
+
+  for ((i=0; ${#found[@]} < 80; i++)); do
+    read hash
+  #  [[ ${#hashes[@]} -ge 2000 ]] && hashes=("${hashes[@]:1000}")
+    hashes+=("$hash")
+    m=$(grep -o -P '(.)(?=\1{4})' <<< $hash)
+    if [ -n "$m" ] ; then
+      echo found 5: $i ${#hashes[@]} $m $hash
+      start=$((${#hashes[@]} - 1000 - 1))
+      [[ $start -lt 0 ]] && start=0
+      for((j=start; j < ${#hashes[@]} - 1; j++)); do
+        if [[ ${hashes[j]} =~ $m$m$m ]]; then
+          found[$j]="$j ${hashes[j]}"
+          echo "found 3 #${#found[@]} @ $j ${hashes[j]}"
+        fi
+      done
     fi
-    for((j=start; k < i; j++)); do
-      if [[ ${hashes[j]} =~ $m$m$m ]]; then
-        ((k++))
-        echo "found 3 #$k @ $i ${hashes[j]}"
-        [[ $k -eq 64 ]] && exit
-        break
-      fi
-    done
-  fi
-
-done
+  done
+  printf "%s\n" "${found[@]}" | sort -n
+}
