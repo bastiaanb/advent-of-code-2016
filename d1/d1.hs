@@ -5,8 +5,6 @@ step pos dir vis l = step newPos dir (vis ++ [newPos]) (l - 1) where newPos = po
 
 turnAndMove (pos, dir, vis) (t:l) = step pos newDir vis (read l :: Int) where newDir = (turn t dir)
 
-times l [x, y] = [ l * x, l * y ]
-
 move [px, py] [ dx, dy ] = [ px + dx, py + dy ]
 
 turn 'L' [x, y] = [ y, -x ]
