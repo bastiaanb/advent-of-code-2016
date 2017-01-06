@@ -1,22 +1,25 @@
 input = ["R4", "R4", "L1", "R3", "L5", "R2", "R5", "R1", "L4", "R3", "L5", "R2", "L3", "L4", "L3", "R1", "R5", "R1", "L3", "L1", "R3", "L1", "R2", "R2", "L2", "R5", "L3", "L4", "R4", "R4", "R2", "L4", "L1", "R5", "L1", "L4", "R4", "L1", "R1", "L2", "R5", "L2", "L3", "R2", "R1", "L194", "R2", "L4", "R49", "R1", "R3", "L5", "L4", "L1", "R4", "R2", "R1", "L5", "R3", "L5", "L4", "R4", "R4", "L2", "L3", "R78", "L5", "R4", "R191", "R4", "R3", "R1", "L2", "R1", "R3", "L1", "R3", "R4", "R2", "L2", "R1", "R4", "L5", "R2", "L2", "L4", "L2", "R1", "R2", "L3", "R5", "R2", "L3", "L3", "R3", "L1", "L1", "R5", "L4", "L4", "L2", "R5", "R1", "R4", "L3", "L5", "L4", "R5", "L4", "R5", "R4", "L3", "L2", "L5", "R4", "R3", "L3", "R1", "L5", "R5", "R1", "L3", "R2", "L5", "R5", "L3", "R1", "R4", "L5", "R4", "R2", "R3", "L4", "L5", "R3", "R4", "L5", "L5", "R4", "L4", "L4", "R1", "R5", "R3", "L1", "L4", "L3", "L4", "R1", "L5", "L1", "R2", "R2", "R4", "R4", "L5", "R4", "R1", "L1", "L1", "L3", "L5", "L2", "R4", "L3", "L5", "L4", "L1", "R3"]
+startPos = [0, 0]
+startDir = [1, 0]
 
-walk = fst $ foldl turnAndMove ([[0, 0]], [1, 0]) input
+walk = fst $ foldl turnAndMove ([startPos], startDir) input
 
-turnAndMove (pth, dir) (t:l) = (newPth, newDir)
+turnAndMove (path, dir) (turn:steps) = (newPath, newDir)
   where
-    newDir = turn t dir
-    newPth = step pth newDir (read l :: Int)
+    newDir = rotate turn dir
+    newPath = step path newDir (read steps :: Int)
 
-step pth _ 0 = pth
-step pth dir l = step (pth ++ [move dir $ last pth]) dir (l - 1)
+step path _ 0 = path
+step path dir steps = step (path ++ [move dir $ last path]) dir (steps - 1)
 
 move [dx, dy] [px, py] = [px + dx, py + dy]
 
-turn 'L' [x, y] = [y, -x]
-turn 'R' [x, y] = [-y, x]
+rotate 'L' [x, y] = [y, -x]
+rotate 'R' [x, y] = [-y, x]
 
 distance [x, y] = abs x + abs y
 
+-- both crash if there is no location with multiple visits :-)
 firstOfMultipleVisited (x:xs) = if x `elem` xs then x else firstOfMultipleVisited xs
 firstSecondVisit h (x:xs) = if x `elem` h then x else firstSecondVisit (h ++ [x]) xs
 
