@@ -9,12 +9,12 @@ turnAndMove (path, dir) (turn:steps) = (newPath, newDir)
     newDir = rotate turn dir
     newPath = path ++ ( take (read steps :: Int) $ tail $ iterate (move newDir) $ last path )
 
-move [dx, dy] [px, py] = [px + dx, py + dy]
+move = zipWith (+)
 
 rotate 'L' [x, y] = [y, -x]
 rotate 'R' [x, y] = [-y, x]
 
-distance [x, y] = abs x + abs y
+distance = sum . map abs
 
 -- both crash if there is no location with multiple visits :-)
 firstOfMultipleVisited (x:xs) = if x `elem` xs then x else firstOfMultipleVisited xs
