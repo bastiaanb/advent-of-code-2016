@@ -7,10 +7,7 @@ walk = fst $ foldl turnAndMove ([startPos], startDir) input
 turnAndMove (path, dir) (turn:steps) = (newPath, newDir)
   where
     newDir = rotate turn dir
-    newPath = step path newDir (read steps :: Int)
-
-step path _ 0 = path
-step path dir steps = step (path ++ [move dir $ last path]) dir (steps - 1)
+    newPath = path ++ ( take (read steps :: Int) $ tail $ iterate (move newDir) $ last path )
 
 move [dx, dy] [px, py] = [px + dx, py + dy]
 
