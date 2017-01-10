@@ -6,5 +6,5 @@ moveMultipleFloors [x]    = moveOneFloor x
 moveMultipleFloors (x:xs) = moveOneFloor x + (moveMultipleFloors ((x + (head xs)):(tail xs)))
 
 main = do
-  print ( moveMultipleFloors [8,2,0] )
-  print ( moveMultipleFloors [8+4,2,0] )
+  print $ moveMultipleFloors [8,2,0]
+  print $ moveMultipleFloors [8+4,2,0]
